@@ -40,7 +40,8 @@ class TestChessFinder(unittest.TestCase):
         self.assertEqual(rook()(piece_index), expected)
 
     def test_bishop_movement(self):
-        expected = [(7, 2), (6, 3), (4, 5), (3, 6), (2, 7)]
+        expected = [(7, 2), (6, 3), (4, 5), (3, 6), (2, 7),
+                    (7, 6), (6, 5), (4, 3), (3, 2), (2, 1), (1, 0)]
         piece_index = (5, 4)
         self.assertEqual(bishop()(piece_index), expected)
 

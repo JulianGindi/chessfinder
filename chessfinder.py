@@ -22,25 +22,26 @@ def pawn(piece_color: ChessPiece):
 def rook():
     def f(piece_index):
         v_moves = map(lambda x: (piece_index[0] + x, piece_index[1]), range(-BOARD_SIZE, BOARD_SIZE, 1))
-        v_moves = filter_invalid_moves(v_moves)
-        v_moves.remove(piece_index)
         h_moves = map(lambda x: (piece_index[0], piece_index[1] + x), range(-BOARD_SIZE, BOARD_SIZE, 1))
-        h_moves = filter_invalid_moves(h_moves)
-        h_moves.remove(piece_index)
+        v_moves = filter_invalid_moves(v_moves, piece_index)
+        h_moves = filter_invalid_moves(h_moves, piece_index)
         return list(v_moves) + list(h_moves)
     return f
 
 
 def bishop():
     def f(piece_index):
-        moves = map(lambda x: (piece_index[0] - x, piece_index[1] + x), range(-BOARD_SIZE, BOARD_SIZE, 1))
-        moves = filter_invalid_moves(moves)
-        moves.remove(piece_index)
-        return moves
+        moves_a = map(lambda x: (piece_index[0] - x, piece_index[1] + x), range(-BOARD_SIZE, BOARD_SIZE, 1))
+        moves_b = map(lambda x: (piece_index[0] - x, piece_index[1] - x), range(-BOARD_SIZE, BOARD_SIZE, 1))
+        moves_a = filter_invalid_moves(moves_a, piece_index)
+        moves_b = filter_invalid_moves(moves_b, piece_index)
+        return moves_a + moves_b
     return f
 
-def filter_invalid_moves(moves):
-    return list(filter(lambda x: x[0] >= 0 and x[0] < BOARD_SIZE and x[1] >= 0 and x[1] < BOARD_SIZE, moves))
+def filter_invalid_moves(moves, pos):
+    move_list = list(filter(lambda x: x[0] >= 0 and x[0] < BOARD_SIZE and x[1] >= 0 and x[1] < BOARD_SIZE, moves))
+    move_list.remove(pos)
+    return move_list
 
 
 def is_legal_move(start: BoardIndex, end: BoardIndex, piece_type: ChessPiece) -> bool:
