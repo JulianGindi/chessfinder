@@ -26,43 +26,43 @@ class TestChessFinder(unittest.TestCase):
         expected = [(2, 0), (3, 0)]
         piece_index = (1, 0)
         pawn_color = return_piece_at_location(piece_index, TEST_BOARD)
-        self.assertCountEqual(pawn(pawn_color)(piece_index), expected)
+        self.assertCountEqual(pawn(pawn_color)(piece_index, TEST_BOARD), expected)
 
     def test_white_pawn_movement(self):
         expected = [(5, 0), (4, 0)]
         piece_index = (6, 0)
         pawn_color = return_piece_at_location(piece_index, TEST_BOARD)
-        self.assertCountEqual(pawn(pawn_color)(piece_index), expected)
+        self.assertCountEqual(pawn(pawn_color)(piece_index, TEST_BOARD), expected)
 
     def test_rook_movement(self):
-        expected = [(0, 2), (1, 2), (3, 2), (4, 2), (5, 2), (6, 2), (7, 2),
+        expected = [(3, 2), (4, 2), (5, 2), (6, 2), (7, 2),
                     (2, 0), (2, 1), (2, 3), (2, 4), (2, 5), (2, 6), (2, 7)]
         piece_index = (2, 2)
-        self.assertCountEqual(rook()(piece_index), expected)
+        self.assertCountEqual(rook()(piece_index, TEST_BOARD), expected)
 
     def test_knight_movement(self):
-        expected = [(5, 5), (5, 7), (6, 4)]
+        expected = [(5, 7)]
         piece_index = (7, 6)
-        self.assertCountEqual(knight()(piece_index), expected)
+        self.assertCountEqual(knight()(piece_index, TEST_BOARD), expected)
 
     def test_bishop_movement(self):
         expected = [(7, 2), (6, 3), (4, 5), (3, 6), (2, 7),
-                    (7, 6), (6, 5), (4, 3), (3, 2), (2, 1), (1, 0)]
+                    (6, 5), (4, 3), (3, 2), (2, 1), (1, 0)]
         piece_index = (5, 4)
-        self.assertCountEqual(bishop()(piece_index), expected)
+        self.assertCountEqual(bishop()(piece_index, TEST_BOARD), expected)
 
     def test_queen_movement(self):
-        expected = [(2, 3), (1, 3), (0, 3), (3, 0), (3, 1), (3, 2), (3, 4),
+        expected = [(2, 3), (0, 3), (3, 0), (3, 1), (3, 2), (3, 4),
                     (3, 5), (3, 6), (3, 7), (4, 2), (5, 1), (6, 0), (2, 4),
-                    (1, 5), (0, 6), (2, 2), (1, 1), (0, 0), (4, 4), (5, 5),
-                    (6, 6), (7, 7), (4, 3), (5, 3), (6, 3), (7, 3)]
+                    (0, 0), (4, 4), (5, 5), (6, 6), (7, 7), (4, 3), (5, 3),
+                    (6, 3), (7, 3)]
         piece_index = (3, 3)
-        self.assertCountEqual(queen()(piece_index), expected)
+        self.assertCountEqual(queen()(piece_index, TEST_BOARD), expected)
 
     def test_king_movement(self):
-        expected = [(7, 3), (7, 5), (6, 4), (6, 3), (6, 5)]
+        expected = [(6, 3), (6, 5)]
         piece_index = (7, 4)
-        self.assertCountEqual(king()(piece_index), expected)
+        self.assertCountEqual(king()(piece_index, TEST_BOARD), expected)
 
 if __name__ == '__main__':
     unittest.main()
