@@ -9,9 +9,9 @@ TEST_BOARD = [
     [0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0],
-    [1,1,1,1,1,1,1,1],
-    [4,2,3,5,6,3,2,4]
+    [0,0,0,1,3,0,0,0],
+    [1,1,1,0,1,1,1,1],
+    [4,2,0,5,6,3,2,4]
 ]
 
 class TestChessFinder(unittest.TestCase):
@@ -44,6 +44,11 @@ class TestChessFinder(unittest.TestCase):
         piece_index = (7, 0)
         pawn_color = return_piece_at_location(piece_index, TEST_BOARD)
         self.assertEqual(rook(pawn_color)(piece_index), expected)
+
+    def test_bishop_movement(self):
+        expected = [(7, 2), (6, 3), (4, 5), (3, 6), (2, 7)]
+        piece_index = (5, 4)
+        self.assertEqual(bishop()(piece_index), expected)
 
 if __name__ == '__main__':
     unittest.main()
