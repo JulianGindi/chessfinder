@@ -4,9 +4,9 @@ import unittest
 from chessfinder import *
 
 TEST_BOARD = [
-    [10,8,9,11,12,9,8,10],
+    [0,8,9,11,12,9,8,10],
     [7,7,7,7,7,7,7,7],
-    [0,0,0,0,0,0,0,0],
+    [0,0,10,0,0,0,0,0],
     [0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0],
     [0,0,0,1,3,0,0,0],
@@ -33,17 +33,11 @@ class TestChessFinder(unittest.TestCase):
         pawn_color = return_piece_at_location(piece_index, TEST_BOARD)
         self.assertEqual(pawn(pawn_color)(piece_index), expected)
 
-    def test_black_rook_movement(self):
-        expected = [(1, 0), (2, 0), (3, 0), (4, 0), (5, 0), (6, 0), (7, 0)]
-        piece_index = (0, 0)
-        pawn_color = return_piece_at_location(piece_index, TEST_BOARD)
-        self.assertEqual(rook(pawn_color)(piece_index), expected)
-
-    def test_white_rook_movement(self):
-        expected = [(6, 0), (5, 0), (4, 0), (3, 0), (2, 0), (1, 0), (0, 0)]
-        piece_index = (7, 0)
-        pawn_color = return_piece_at_location(piece_index, TEST_BOARD)
-        self.assertEqual(rook(pawn_color)(piece_index), expected)
+    def test_rook_movement(self):
+        expected = [(0, 2), (1, 2), (3, 2), (4, 2), (5, 2), (6, 2), (7, 2),
+                    (2, 0), (2, 1), (2, 3), (2, 4), (2, 5), (2, 6), (2, 7)]
+        piece_index = (2, 2)
+        self.assertEqual(rook()(piece_index), expected)
 
     def test_bishop_movement(self):
         expected = [(7, 2), (6, 3), (4, 5), (3, 6), (2, 7)]
