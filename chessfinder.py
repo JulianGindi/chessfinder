@@ -12,6 +12,15 @@ class ChessPiece:
         BPawn, BKnight, BBishop, BRook, BQueen, BKing = range(1,13)
 
 
+def king():
+    def f(piece_index):
+        movement = [(0, 0), (0, 1), (0, -1), (1, 0), (-1, 0), (1, 1), (-1, 1), (1, -1), (-1, -1)]
+        moves = map(lambda x: (piece_index[0] + x[0], piece_index[1] + x[1]), movement)
+        moves = filter_invalid_moves(moves, piece_index)
+        return list(moves)
+    return f
+
+
 def pawn(piece_color: ChessPiece):
     if piece_color is ChessPiece.BPawn:
         return lambda x: (x[0] + 1, x[1])
