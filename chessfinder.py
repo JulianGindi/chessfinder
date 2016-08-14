@@ -47,6 +47,13 @@ def bishop():
         return moves_a + moves_b
     return f
 
+def queen():
+    def f(piece_index):
+        moves_a = rook()(piece_index)
+        moves_b = bishop()(piece_index)
+        return moves_a + moves_b
+    return f
+
 def filter_invalid_moves(moves, pos):
     move_list = list(filter(lambda x: x[0] >= 0 and x[0] < BOARD_SIZE and x[1] >= 0 and x[1] < BOARD_SIZE, moves))
     move_list.remove(pos)
