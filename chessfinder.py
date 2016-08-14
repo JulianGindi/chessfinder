@@ -184,7 +184,7 @@ def walk(board, piece_index, direction):
         # First we will check positive movement
         while i is 0:
             next_pos = (current_piece_index[0] + 1, current_piece_index[1] - 1)
-            if next_pos[0] > 7 or next_pos[1] > 7:
+            if next_pos[0] > 7 or next_pos[1] < 0:
                 break
             i = return_piece_at_location(next_pos, board)
             current_piece_index = next_pos
@@ -195,7 +195,7 @@ def walk(board, piece_index, direction):
         current_piece_index = piece_index
         while i is 0:
             next_pos = (current_piece_index[0] - 1, current_piece_index[1] + 1)
-            if next_pos[0] < 0 or next_pos[1] < 0:
+            if next_pos[0] < 0 or next_pos[1] > 7:
                 break
             i = return_piece_at_location(next_pos, board)
             current_piece_index = next_pos
