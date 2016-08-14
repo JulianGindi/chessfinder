@@ -35,12 +35,8 @@ def pawn(piece_color: ChessPiece):
 
 def rook():
     def f(piece_index, board):
-        v_moves = map(lambda x: (piece_index[0] + x, piece_index[1]),
-                      range(-BOARD_SIZE, BOARD_SIZE, 1))
-        h_moves = map(lambda x: (piece_index[0], piece_index[1] + x),
-                      range(-BOARD_SIZE, BOARD_SIZE, 1))
-        v_moves = filter_invalid_moves(v_moves, piece_index, board)
-        h_moves = filter_invalid_moves(h_moves, piece_index, board)
+        h_moves = walk(board, piece_index, 'horizontal')
+        v_moves = walk(board, piece_index, 'vertical')
         return list(v_moves) + list(h_moves)
     return f
 
@@ -51,10 +47,11 @@ def bishop():
                       range(-BOARD_SIZE, BOARD_SIZE, 1))
         moves_b = map(lambda x: (piece_index[0] - x, piece_index[1] - x),
                       range(-BOARD_SIZE, BOARD_SIZE, 1))
-        moves_a = filter_invalid_moves(moves_a, piece_index, board)
-        moves_b = filter_invalid_moves(moves_b, piece_index, board)
-        return moves_a + moves_b
+        moves_a = walk(board, piece_index, 'diagonalR')
+        moves_b = walk(board, piece_index, 'diagonalL')
+        return list(moves_a) + list(moves_b)
     return f
+
 
 def knight():
     def f(piece_index, board):
@@ -64,6 +61,7 @@ def knight():
         return list(moves)
     return f
 
+
 def queen():
     def f(piece_index, board):
         moves_a = rook()(piece_index, board)
@@ -71,21 +69,21 @@ def queen():
         return moves_a + moves_b
     return f
 
+
 def add_movement_to_piece(piece_index, movement, board):
     m = map(lambda x: (piece_index[0] + x[0], piece_index[1] + x[1]), movement)
     m = filter_invalid_moves(m, piece_index, board)
     return m
 
 
+# TODO: Need to figure out a way to handle pawn capture
 def filter_invalid_moves(moves, piece_position, board):
     def is_valid_capture(x):
-        white_pieces = range(1, 7)
-        black_pieces = range(7, 13)
-        capture_type = return_piece_at_location(x, board)
-        piece_type = return_piece_at_location(piece_position, board)
-        if capture_type in white_pieces and piece_type in white_pieces:
+        piece_color = get_piece_color(piece_position, board)
+        capture_color = get_piece_color(x, board)
+        if capture_color is 'white' and piece_color is 'white':
             return False
-        elif capture_type in black_pieces and piece_type in black_pieces:
+        elif capture_color is 'black' and piece_color is 'black':
             return False
         return True
 
@@ -96,5 +94,112 @@ def filter_invalid_moves(moves, piece_position, board):
     return move_list
 
 
+def get_piece_color(piece_position, board):
+    white_pieces = range(1, 7)
+    black_pieces = range(7, 13)
+    piece_type = return_piece_at_location(piece_position, board)
+    if piece_type in white_pieces:
+        return 'white'
+    elif piece_type in black_pieces:
+        return 'black'
+    return None
+
+
 def return_piece_at_location(loc: BoardIndex, board: Board) -> ChessPiece:
     return board[loc[0]][loc[1]]
+
+
+def walk(board, piece_index, direction):
+    move_list = []
+    current_piece_index = piece_index
+    piece_color = get_piece_color(piece_index, board)
+    if direction is 'horizontal':
+        i = 0
+        # First we will check positive movement
+        while i is 0:
+            next_pos = (current_piece_index[0], current_piece_index[1] + 1)
+            if next_pos[1] > 7:
+                break
+            i = return_piece_at_location(next_pos, board)
+            current_piece_index = next_pos
+            if get_piece_color(next_pos, board) is not piece_color:
+                move_list.append(next_pos)
+
+        i = 0
+        current_piece_index = piece_index
+        while i is 0:
+            next_pos = (current_piece_index[0], current_piece_index[1] - 1)
+            if next_pos[1] < 0:
+                break
+            i = return_piece_at_location(next_pos, board)
+            current_piece_index = next_pos
+            if get_piece_color(next_pos, board) is not piece_color:
+                move_list.append(next_pos)
+    elif direction is 'vertical':
+        i = 0
+        # First we will check positive movement
+        while i is 0:
+            next_pos = (current_piece_index[0] + 1, current_piece_index[1])
+            if next_pos[0] > 7:
+                break
+            i = return_piece_at_location(next_pos, board)
+            current_piece_index = next_pos
+            if get_piece_color(next_pos, board) is not piece_color:
+                move_list.append(next_pos)
+
+        i = 0
+        current_piece_index = piece_index
+        while i is 0:
+            next_pos = (current_piece_index[0] - 1, current_piece_index[1])
+            if next_pos[0] < 0:
+                break
+            i = return_piece_at_location(next_pos, board)
+            current_piece_index = next_pos
+            if get_piece_color(next_pos, board) is not piece_color:
+                move_list.append(next_pos)
+    elif direction is 'diagonalR':
+        i = 0
+        # First we will check positive movement
+        while i is 0:
+            next_pos = (current_piece_index[0] + 1, current_piece_index[1] + 1)
+            if next_pos[0] > 7 or next_pos[1] > 7:
+                break
+            i = return_piece_at_location(next_pos, board)
+            current_piece_index = next_pos
+            if get_piece_color(next_pos, board) is not piece_color:
+                move_list.append(next_pos)
+
+        i = 0
+        current_piece_index = piece_index
+        while i is 0:
+            next_pos = (current_piece_index[0] - 1, current_piece_index[1] - 1)
+            if next_pos[0] < 0 or next_pos[1] < 0:
+                break
+            i = return_piece_at_location(next_pos, board)
+            current_piece_index = next_pos
+            if get_piece_color(next_pos, board) is not piece_color:
+                move_list.append(next_pos)
+    elif direction is 'diagonalL':
+        i = 0
+        # First we will check positive movement
+        while i is 0:
+            next_pos = (current_piece_index[0] + 1, current_piece_index[1] - 1)
+            if next_pos[0] > 7 or next_pos[1] > 7:
+                break
+            i = return_piece_at_location(next_pos, board)
+            current_piece_index = next_pos
+            if get_piece_color(next_pos, board) is not piece_color:
+                move_list.append(next_pos)
+
+        i = 0
+        current_piece_index = piece_index
+        while i is 0:
+            next_pos = (current_piece_index[0] - 1, current_piece_index[1] + 1)
+            if next_pos[0] < 0 or next_pos[1] < 0:
+                break
+            i = return_piece_at_location(next_pos, board)
+            current_piece_index = next_pos
+            if get_piece_color(next_pos, board) is not piece_color:
+                move_list.append(next_pos)
+
+    return move_list
