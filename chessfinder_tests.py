@@ -3,6 +3,7 @@ import unittest
 
 from chessfinder import *
 
+# Board format will be a multidimensional array
 TEST_BOARD = [
     #0  1  2  3  4   5  6  7
     [0, 8, 9, 0, 12, 9, 8, 10], # 0
