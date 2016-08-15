@@ -3,7 +3,8 @@ import operator
 
 BOARD_SIZE = 8
 
-
+# Using this class as a simple enum matching human-readable names with
+# easier to work with ints
 class ChessPiece:
     WPawn, WKnight, WBishop, WRook, WQueen, WKing, \
             BPawn, BKnight, BBishop, BRook, BQueen, BKing = range(1, 13)
