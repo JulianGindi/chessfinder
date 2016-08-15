@@ -1,16 +1,12 @@
 # ChessFinder
 import operator
-from typing import Tuple, List
-
-# Custom type to represent a chesspiece index
-BoardIndex = Tuple[int,int]
-Board = List[List[str]]
 
 BOARD_SIZE = 8
 
+
 class ChessPiece:
-        WPawn, WKnight, WBishop, WRook, WQueen, WKing, \
-        BPawn, BKnight, BBishop, BRook, BQueen, BKing = range(1,13)
+    WPawn, WKnight, WBishop, WRook, WQueen, WKing, \
+            BPawn, BKnight, BBishop, BRook, BQueen, BKing = range(1, 13)
 
 
 def king():
@@ -21,7 +17,7 @@ def king():
     return f
 
 
-def pawn(piece_color: ChessPiece):
+def pawn(piece_color):
     def f(piece_index, board):
         movement = [(1, 0)]
         # If pawn is in starting file, it can move two spaces as well
@@ -32,7 +28,7 @@ def pawn(piece_color: ChessPiece):
                return_piece_at_location(tuple(map(operator.add, piece_index, (1, 1))), board) is not 0:
                 movement.append((1, 1))
             elif get_piece_color(tuple(map(operator.add, piece_index, (1, -1))), board) is not 'black' and \
-               return_piece_at_location(tuple(map(operator.add, piece_index, (1, -1))), board) is not 0:
+                    return_piece_at_location(tuple(map(operator.add, piece_index, (1, -1))), board) is not 0:
                 movement.append((1, -1))
             return map(lambda x: (piece_index[0] + x[0], piece_index[1] + x[1]), movement)
         elif piece_color is ChessPiece.WPawn:
@@ -40,7 +36,7 @@ def pawn(piece_color: ChessPiece):
                return_piece_at_location(tuple(map(operator.add, piece_index, (-1, 1))), board) is not 0:
                 movement.append((1, 1))
             if get_piece_color(tuple(map(operator.add, piece_index, (-1, -1))), board) is not 'white' and \
-                   return_piece_at_location(tuple(map(operator.add, piece_index, (-1, -1))), board) is not 0:
+               return_piece_at_location(tuple(map(operator.add, piece_index, (-1, -1))), board) is not 0:
                 movement.append((1, -1))
             return map(lambda x: (piece_index[0] - x[0], piece_index[1] + x[1]), movement)
     return f
@@ -114,7 +110,7 @@ def get_piece_color(piece_position, board):
     return None
 
 
-def return_piece_at_location(loc: BoardIndex, board: Board) -> ChessPiece:
+def return_piece_at_location(loc, board):
     return board[loc[0]][loc[1]]
 
 
