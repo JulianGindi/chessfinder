@@ -18,7 +18,6 @@ TEST_BOARD = [
 
 class TestChessFinder(unittest.TestCase):
 
-
     def test_return_piece_at_location(self):
         expected = ChessPiece.BBishop
         self.assertEqual(return_piece_at_location((0, 2), TEST_BOARD), expected)

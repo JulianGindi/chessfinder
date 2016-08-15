@@ -18,6 +18,7 @@ def king():
     return f
 
 
+# TODO: Refactor
 def pawn(piece_color):
     def f(piece_index, board):
         movement = [(1, 0)]
@@ -72,6 +73,7 @@ def queen():
     def f(piece_index, board):
         moves_a = rook()(piece_index, board)
         moves_b = bishop()(piece_index, board)
+        #import pdb; pdb.set_trace()
         return moves_a + moves_b
     return f
 
@@ -119,7 +121,13 @@ def add_board_index(index, movement):
     return tuple(map(operator.add, index, movement))
 
 
-def walk_recursive(piece_index, original_piece_color, movement, board, move_list):
+def out_of_bounds(piece_index):
+    return piece_index[0] > 7 or piece_index[0] < 0 \
+            or piece_index[1] > 7 or piece_index[1] < 0
+
+
+def walk_recursive(piece_index, original_piece, movement, board, move_list, first_loop=False):
+    original_piece_color = get_piece_color(original_piece, board)
     next_pos = add_board_index(piece_index, movement)
     if out_of_bounds(piece_index):
         return move_list
@@ -128,28 +136,24 @@ def walk_recursive(piece_index, original_piece_color, movement, board, move_list
     if get_piece_color(piece_index, board) is not original_piece_color and return_piece_at_location(piece_index, board) is not 0:
         move_list.append(piece_index)
         return move_list
-    return walk_recursive(next_pos, original_piece_color, movement, board, move_list)
-
-
-def out_of_bounds(piece_index):
-    return piece_index[0] > 7 or piece_index[0] < 0 \
-            or piece_index[1] > 7 or piece_index[1] < 0
+    if get_piece_color(piece_index, board) is original_piece_color and not first_loop:
+        return move_list
+    return walk_recursive(next_pos, original_piece, movement, board, move_list)
 
 
 def walk(board, piece_index, direction):
     move_list = []
     current_piece_index = piece_index
-    piece_color = get_piece_color(piece_index, board)
     if direction is 'horizontal':
-        move_list = walk_recursive(piece_index, piece_color, (0, 1), board, move_list)
-        move_list = walk_recursive(piece_index, piece_color, (0, -1), board, move_list)
+        move_list = walk_recursive(piece_index, piece_index, (0, 1), board, move_list, True)
+        move_list = walk_recursive(piece_index, piece_index, (0, -1), board, move_list, True)
     elif direction is 'vertical':
-        move_list = walk_recursive(piece_index, piece_color, (1, 0), board, move_list)
-        move_list = walk_recursive(piece_index, piece_color, (-1, 0), board, move_list)
+        move_list = walk_recursive(piece_index, piece_index, (1, 0), board, move_list, True)
+        move_list = walk_recursive(piece_index, piece_index, (-1, 0), board, move_list, True)
     elif direction is 'diagonalR':
-        move_list = walk_recursive(piece_index, piece_color, (1, 1), board, move_list)
-        move_list = walk_recursive(piece_index, piece_color, (-1, -1), board, move_list)
+        move_list = walk_recursive(piece_index, piece_index, (1, 1), board, move_list, True)
+        move_list = walk_recursive(piece_index, piece_index, (-1, -1), board, move_list, True)
     elif direction is 'diagonalL':
-        move_list = walk_recursive(piece_index, piece_color, (1, -1), board, move_list)
-        move_list = walk_recursive(piece_index, piece_color, (-1, 1), board, move_list)
+        move_list = walk_recursive(piece_index, piece_index, (1, -1), board, move_list, True)
+        move_list = walk_recursive(piece_index, piece_index, (-1, 1), board, move_list, True)
     return move_list
