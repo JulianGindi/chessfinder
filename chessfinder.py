@@ -119,97 +119,37 @@ def add_board_index(index, movement):
     return tuple(map(operator.add, index, movement))
 
 
+def walk_recursive(piece_index, original_piece_color, movement, board, move_list):
+    next_pos = add_board_index(piece_index, movement)
+    if out_of_bounds(piece_index):
+        return move_list
+    if return_piece_at_location(piece_index, board) is 0:
+        move_list.append(piece_index)
+    if get_piece_color(piece_index, board) is not original_piece_color and return_piece_at_location(piece_index, board) is not 0:
+        move_list.append(piece_index)
+        return move_list
+    return walk_recursive(next_pos, original_piece_color, movement, board, move_list)
+
+
+def out_of_bounds(piece_index):
+    return piece_index[0] > 7 or piece_index[0] < 0 \
+            or piece_index[1] > 7 or piece_index[1] < 0
+
+
 def walk(board, piece_index, direction):
     move_list = []
     current_piece_index = piece_index
     piece_color = get_piece_color(piece_index, board)
     if direction is 'horizontal':
-        i = 0
-        # First we will check positive movement
-        while i is 0:
-            next_pos = (current_piece_index[0], current_piece_index[1] + 1)
-            if next_pos[1] > 7:
-                break
-            i = return_piece_at_location(next_pos, board)
-            current_piece_index = next_pos
-            if get_piece_color(next_pos, board) is not piece_color:
-                move_list.append(next_pos)
-
-        i = 0
-        current_piece_index = piece_index
-        while i is 0:
-            next_pos = (current_piece_index[0], current_piece_index[1] - 1)
-            if next_pos[1] < 0:
-                break
-            i = return_piece_at_location(next_pos, board)
-            current_piece_index = next_pos
-            if get_piece_color(next_pos, board) is not piece_color:
-                move_list.append(next_pos)
+        move_list = walk_recursive(piece_index, piece_color, (0, 1), board, move_list)
+        move_list = walk_recursive(piece_index, piece_color, (0, -1), board, move_list)
     elif direction is 'vertical':
-        i = 0
-        # First we will check positive movement
-        while i is 0:
-            next_pos = (current_piece_index[0] + 1, current_piece_index[1])
-            if next_pos[0] > 7:
-                break
-            i = return_piece_at_location(next_pos, board)
-            current_piece_index = next_pos
-            if get_piece_color(next_pos, board) is not piece_color:
-                move_list.append(next_pos)
-
-        i = 0
-        current_piece_index = piece_index
-        while i is 0:
-            next_pos = (current_piece_index[0] - 1, current_piece_index[1])
-            if next_pos[0] < 0:
-                break
-            i = return_piece_at_location(next_pos, board)
-            current_piece_index = next_pos
-            if get_piece_color(next_pos, board) is not piece_color:
-                move_list.append(next_pos)
+        move_list = walk_recursive(piece_index, piece_color, (1, 0), board, move_list)
+        move_list = walk_recursive(piece_index, piece_color, (-1, 0), board, move_list)
     elif direction is 'diagonalR':
-        i = 0
-        # First we will check positive movement
-        while i is 0:
-            next_pos = (current_piece_index[0] + 1, current_piece_index[1] + 1)
-            if next_pos[0] > 7 or next_pos[1] > 7:
-                break
-            i = return_piece_at_location(next_pos, board)
-            current_piece_index = next_pos
-            if get_piece_color(next_pos, board) is not piece_color:
-                move_list.append(next_pos)
-
-        i = 0
-        current_piece_index = piece_index
-        while i is 0:
-            next_pos = (current_piece_index[0] - 1, current_piece_index[1] - 1)
-            if next_pos[0] < 0 or next_pos[1] < 0:
-                break
-            i = return_piece_at_location(next_pos, board)
-            current_piece_index = next_pos
-            if get_piece_color(next_pos, board) is not piece_color:
-                move_list.append(next_pos)
+        move_list = walk_recursive(piece_index, piece_color, (1, 1), board, move_list)
+        move_list = walk_recursive(piece_index, piece_color, (-1, -1), board, move_list)
     elif direction is 'diagonalL':
-        i = 0
-        # First we will check positive movement
-        while i is 0:
-            next_pos = (current_piece_index[0] + 1, current_piece_index[1] - 1)
-            if next_pos[0] > 7 or next_pos[1] < 0:
-                break
-            i = return_piece_at_location(next_pos, board)
-            current_piece_index = next_pos
-            if get_piece_color(next_pos, board) is not piece_color:
-                move_list.append(next_pos)
-
-        i = 0
-        current_piece_index = piece_index
-        while i is 0:
-            next_pos = (current_piece_index[0] - 1, current_piece_index[1] + 1)
-            if next_pos[0] < 0 or next_pos[1] > 7:
-                break
-            i = return_piece_at_location(next_pos, board)
-            current_piece_index = next_pos
-            if get_piece_color(next_pos, board) is not piece_color:
-                move_list.append(next_pos)
-
+        move_list = walk_recursive(piece_index, piece_color, (1, -1), board, move_list)
+        move_list = walk_recursive(piece_index, piece_color, (-1, 1), board, move_list)
     return move_list
