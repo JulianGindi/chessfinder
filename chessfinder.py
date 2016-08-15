@@ -157,3 +157,10 @@ def walk(board, piece_index, direction):
         move_list = walk_recursive(piece_index, piece_index, (1, -1), board, move_list, True)
         move_list = walk_recursive(piece_index, piece_index, (-1, 1), board, move_list, True)
     return move_list
+
+
+# Our Main Function
+def get_possible_moves(board, color):
+    for row in board:
+        for piece in row:
+            pass
