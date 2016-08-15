@@ -25,19 +25,19 @@ def pawn(piece_color):
         if piece_index[0] is 6 or piece_index[0] is 1:
             movement.append((2, 0))
         if piece_color is ChessPiece.BPawn:
-            if get_piece_color(tuple(map(operator.add, piece_index, (1, 1))), board) is not 'black' and \
-               return_piece_at_location(tuple(map(operator.add, piece_index, (1, 1))), board) is not 0:
+            if get_piece_color(add_board_index(piece_index, (1, 1)), board) is not 'black' and \
+               return_piece_at_location(add_board_index(piece_index, (1, 1)), board) is not 0:
                 movement.append((1, 1))
-            elif get_piece_color(tuple(map(operator.add, piece_index, (1, -1))), board) is not 'black' and \
-                    return_piece_at_location(tuple(map(operator.add, piece_index, (1, -1))), board) is not 0:
+            elif get_piece_color(add_board_index(piece_index, (1, -1)), board) is not 'black' and \
+                    return_piece_at_location(add_board_index(piece_index, (1, -1)), board) is not 0:
                 movement.append((1, -1))
             return map(lambda x: (piece_index[0] + x[0], piece_index[1] + x[1]), movement)
         elif piece_color is ChessPiece.WPawn:
-            if get_piece_color(tuple(map(operator.add, piece_index, (-1, 1))), board) is not 'white' and \
-               return_piece_at_location(tuple(map(operator.add, piece_index, (-1, 1))), board) is not 0:
+            if get_piece_color(add_board_index(piece_index, (-1, 1)), board) is not 'white' and \
+               return_piece_at_location(add_board_index(piece_index, (-1, 1)), board) is not 0:
                 movement.append((1, 1))
-            if get_piece_color(tuple(map(operator.add, piece_index, (-1, -1))), board) is not 'white' and \
-               return_piece_at_location(tuple(map(operator.add, piece_index, (-1, -1))), board) is not 0:
+            if get_piece_color(add_board_index(piece_index, (-1, -1)), board) is not 'white' and \
+               return_piece_at_location(add_board_index(piece_index, (-1, -1)), board) is not 0:
                 movement.append((1, -1))
             return map(lambda x: (piece_index[0] - x[0], piece_index[1] + x[1]), movement)
     return f
@@ -113,6 +113,10 @@ def get_piece_color(piece_position, board):
 
 def return_piece_at_location(loc, board):
     return board[loc[0]][loc[1]]
+
+
+def add_board_index(index, movement):
+    return tuple(map(operator.add, index, movement))
 
 
 def walk(board, piece_index, direction):
