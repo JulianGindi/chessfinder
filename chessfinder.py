@@ -1,4 +1,5 @@
 # ChessFinder
+import operator
 from typing import Tuple, List
 
 # Custom type to represent a chesspiece index
@@ -27,9 +28,21 @@ def pawn(piece_color: ChessPiece):
         if piece_index[0] is 6 or piece_index[0] is 1:
             movement.append((2, 0))
         if piece_color is ChessPiece.BPawn:
-            return map(lambda x: (piece_index[0] + x[0], piece_index[1]), movement)
+            if get_piece_color(tuple(map(operator.add, piece_index, (1, 1))), board) is not 'black' and \
+               return_piece_at_location(tuple(map(operator.add, piece_index, (1, 1))), board) is not 0:
+                movement.append((1, 1))
+            elif get_piece_color(tuple(map(operator.add, piece_index, (1, -1))), board) is not 'black' and \
+               return_piece_at_location(tuple(map(operator.add, piece_index, (1, -1))), board) is not 0:
+                movement.append((1, -1))
+            return map(lambda x: (piece_index[0] + x[0], piece_index[1] + x[1]), movement)
         elif piece_color is ChessPiece.WPawn:
-            return map(lambda x: (piece_index[0] - x[0], piece_index[1]), movement)
+            if get_piece_color(tuple(map(operator.add, piece_index, (-1, 1))), board) is not 'white' and \
+               return_piece_at_location(tuple(map(operator.add, piece_index, (-1, 1))), board) is not 0:
+                movement.append((1, 1))
+            if get_piece_color(tuple(map(operator.add, piece_index, (-1, -1))), board) is not 'white' and \
+                   return_piece_at_location(tuple(map(operator.add, piece_index, (-1, -1))), board) is not 0:
+                movement.append((1, -1))
+            return map(lambda x: (piece_index[0] - x[0], piece_index[1] + x[1]), movement)
     return f
 
 
@@ -43,10 +56,6 @@ def rook():
 
 def bishop():
     def f(piece_index, board):
-        moves_a = map(lambda x: (piece_index[0] - x, piece_index[1] + x),
-                      range(-BOARD_SIZE, BOARD_SIZE, 1))
-        moves_b = map(lambda x: (piece_index[0] - x, piece_index[1] - x),
-                      range(-BOARD_SIZE, BOARD_SIZE, 1))
         moves_a = walk(board, piece_index, 'diagonalR')
         moves_b = walk(board, piece_index, 'diagonalL')
         return list(moves_a) + list(moves_b)
