@@ -159,7 +159,8 @@ def walk(board, piece_index, direction):
     return move_list
 
 
-# Our Main Function
+# Our Main Function will take a multi-dimensional list representing a board
+# and a string color 'white' or 'black' indicating whose turn it is
 def get_possible_moves(board, color):
     for row in board:
         for piece in row:
