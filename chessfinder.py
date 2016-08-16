@@ -18,28 +18,44 @@ def king(piece_index, board):
 
 
 def pawn(piece_color, piece_index, board):
-    movement = [(1, 0)]
-    # If pawn is in starting file, it can move two spaces as well
-    if piece_index[0] is 6 or piece_index[0] is 1:
-        movement.append((2, 0))
+    movement = []
     if piece_color is ChessPiece.BPawn:
+        p_move = add_board_index(piece_index, (1, 0))
+        if return_piece_at_location(p_move, board) is 0:
+            movement.append((1, 0))
+
+            # Now we will check to see if we can move two spaces
+            p_move = add_board_index(piece_index, (2, 0))
+            if return_piece_at_location(p_move, board) is 0 and piece_index[0] is 1:
+                movement.append((2, 0))
         p_move = add_board_index(piece_index, (1, 1))
-        if not out_of_bounds(p_move, board) and get_piece_color(p_move, board) is not 'black' and \
+        if not out_of_bounds(p_move) and get_piece_color(p_move, board) is not 'black' and \
            return_piece_at_location(p_move, board) is not 0:
             movement.append((1, 1))
         p_move = add_board_index(piece_index, (1, -1))
-        if not out_of_bounds(p_move, board) and get_piece_color(p_move, board) is not 'black' and \
+        if not out_of_bounds(p_move) and get_piece_color(p_move, board) is not 'black' and \
                 return_piece_at_location(p_move, board) is not 0:
             movement.append((1, -1))
         return list(map(lambda x: (piece_index[0] + x[0], piece_index[1] + x[1]), movement))
     elif piece_color is ChessPiece.WPawn:
-        if get_piece_color(add_board_index(piece_index, (-1, 1)), board) is not 'white' and \
-           return_piece_at_location(add_board_index(piece_index, (-1, 1)), board) is not 0:
+        p_move = add_board_index(piece_index, (-1, 0))
+        if return_piece_at_location(p_move, board) is 0:
+            movement.append((1, 0))
+
+            # Now we will check to see if we can move two spaces
+            p_move = add_board_index(piece_index, (-2, 0))
+            if return_piece_at_location(p_move, board) is 0 and piece_index[0] is 6:
+                movement.append((2, 0))
+        p_move = add_board_index(piece_index, (-1, 1))
+        if not out_of_bounds(p_move) and get_piece_color(p_move, board) is not 'white' and \
+           return_piece_at_location(p_move, board) is not 0:
             movement.append((1, 1))
-        if get_piece_color(add_board_index(piece_index, (-1, -1)), board) is not 'white' and \
-           return_piece_at_location(add_board_index(piece_index, (-1, -1)), board) is not 0:
+        p_move = add_board_index(piece_index, (-1, -1))
+        if not out_of_bounds(p_move) and get_piece_color(p_move, board) is not 'white' and \
+           return_piece_at_location(p_move, board) is not 0:
             movement.append((1, -1))
-        return list(map(lambda x: (piece_index[0] - x[0], piece_index[1] + x[1]), movement))
+        p_moves = list(map(lambda x: (piece_index[0] - x[0], piece_index[1] + x[1]), movement))
+        return filter_invalid_moves(p_moves, piece_index, board)
 
 
 def rook(piece_index, board):
@@ -150,16 +166,26 @@ def walk(board, piece_index, direction):
 # Our Main Function will take a multi-dimensional list representing a board
 # and a string color 'white' or 'black' indicating whose turn it is
 def get_possible_moves(board, color):
-    move_list = []
+    move_list = {}
     for row_idx, row in enumerate(board):
         for p_idx, piece in enumerate(row):
             piece_index = (row_idx, p_idx)
             piece_type = return_piece_at_location(piece_index, board)
             piece_color = get_piece_color(piece_index, board)
 
+            if piece_color is not color:
+                continue
+
             if piece_type in [ChessPiece.BPawn, ChessPiece.WPawn]:
-                move_list.append(pawn(piece_type, piece_index, board))
-            #elif piece_type in [ChessPiece.BKnight, ChessPiece.WKnight]:
-            #    move_list.append(knight(piece_index, board))
-    move_list = list(itertools.chain.from_iterable(move_list))
+                move_list[piece_index] = pawn(piece_type, piece_index, board)
+            elif piece_type in [ChessPiece.BKnight, ChessPiece.WKnight]:
+                move_list[piece_index] = knight(piece_index, board)
+            elif piece_type in [ChessPiece.BBishop, ChessPiece.WBishop]:
+                move_list[piece_index] = bishop(piece_index, board)
+            elif piece_type in [ChessPiece.BRook, ChessPiece.WRook]:
+                move_list[piece_index] = rook(piece_index, board)
+            elif piece_type in [ChessPiece.BQueen, ChessPiece.WQueen]:
+                move_list[piece_index] = queen(piece_index, board)
+            elif piece_type in [ChessPiece.BKing, ChessPiece.WKing]:
+                move_list[piece_index] = king(piece_index, board)
     print(move_list)
