@@ -188,4 +188,4 @@ def get_possible_moves(board, color):
                 move_list[piece_index] = queen(piece_index, board)
             elif piece_type in [ChessPiece.BKing, ChessPiece.WKing]:
                 move_list[piece_index] = king(piece_index, board)
-    print(move_list)
+    return move_list
