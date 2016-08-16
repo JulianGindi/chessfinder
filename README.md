@@ -1,5 +1,11 @@
 # Chess Move Finder!!
 
+## Running and Tests
+
+This program is meant to be run with Python 3.5.
+
+Run tests by executing `python chessfinder_tests.py`
+
 ## Inputs
 
 The main function `get_possible_moves` takes two inputs:

@@ -17,6 +17,31 @@ def king(piece_index, board):
     return list(moves)
 
 
+def queen(piece_index, board):
+    moves_a = rook(piece_index, board)
+    moves_b = bishop(piece_index, board)
+    return moves_a + moves_b
+
+
+def rook(piece_index, board):
+    h_moves = walk(board, piece_index, 'horizontal')
+    v_moves = walk(board, piece_index, 'vertical')
+    return list(v_moves) + list(h_moves)
+
+
+def bishop(piece_index, board):
+    moves_a = walk(board, piece_index, 'diagonalR')
+    moves_b = walk(board, piece_index, 'diagonalL')
+    return list(moves_a) + list(moves_b)
+
+
+def knight(piece_index, board):
+    movement = [(2, 1), (2, -1), (-2, 1), (-2, -1),
+                (0, 0), (1, 2), (1, -2), (-1, 2), (-1, -2)]
+    moves = add_movement_to_piece(piece_index, movement, board)
+    return list(moves)
+
+
 def pawn(piece_color, piece_index, board):
     movement = []
     if piece_color is ChessPiece.BPawn:
@@ -56,31 +81,6 @@ def pawn(piece_color, piece_index, board):
             movement.append((1, -1))
         p_moves = list(map(lambda x: (piece_index[0] - x[0], piece_index[1] + x[1]), movement))
         return filter_invalid_moves(p_moves, piece_index, board)
-
-
-def rook(piece_index, board):
-    h_moves = walk(board, piece_index, 'horizontal')
-    v_moves = walk(board, piece_index, 'vertical')
-    return list(v_moves) + list(h_moves)
-
-
-def bishop(piece_index, board):
-    moves_a = walk(board, piece_index, 'diagonalR')
-    moves_b = walk(board, piece_index, 'diagonalL')
-    return list(moves_a) + list(moves_b)
-
-
-def knight(piece_index, board):
-    movement = [(2, 1), (2, -1), (-2, 1), (-2, -1),
-                (0, 0), (1, 2), (1, -2), (-1, 2), (-1, -2)]
-    moves = add_movement_to_piece(piece_index, movement, board)
-    return list(moves)
-
-
-def queen(piece_index, board):
-    moves_a = rook(piece_index, board)
-    moves_b = bishop(piece_index, board)
-    return moves_a + moves_b
 
 
 def add_movement_to_piece(piece_index, movement, board):
