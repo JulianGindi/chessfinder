@@ -1,4 +1,4 @@
-# Chess Move Finder!!
+# Chessfinder 3000!!
 
 ## Running and Tests
 
